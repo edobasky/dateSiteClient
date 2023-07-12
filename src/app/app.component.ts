@@ -17,17 +17,17 @@ export class AppComponent implements OnInit {
   constructor(private _http : HttpClient, private _accountService : AccountService) {}
 
   ngOnInit(): void {
-   this.getUser();
+  // this.getUser();
    this.setCurrentUser();
   }
 
- getUser() {
-      this._http.get('https://localhost:5001/api/users').subscribe({
-      next : response => this.users = response,
-      error : error => console.log(error),
-      complete: () => console.log("Request has been completed!")
-  })
- }
+//  getUser() {
+//       this._http.get('https://localhost:5001/api/users').subscribe({
+//       next : response => this.users = response,
+//       error : error => console.log(error),
+//       complete: () => console.log("Request has been completed!")
+//   })
+//  }
 
  // sets user object if it exist in local storage
  setCurrentUser() {
