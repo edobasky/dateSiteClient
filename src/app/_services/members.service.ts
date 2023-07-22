@@ -42,6 +42,14 @@ export class MembersService {
       );
   }
 
+  setMainPhoto(photoId: number) {
+      return this.http.put(this.baseUrl + 'users/set-main-photo/' + photoId, {});
+  }
+
+  deletePhoto(photoId : number) {
+      return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
+  }
+
   //this will be commented out to use interceptors to send our token
   // the below centralise all request of fmembers with jwt for authorization
   // use interceptors with caution and understanding
