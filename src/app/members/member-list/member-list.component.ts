@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
+import { User } from 'src/app/_models/User';
+import { UserParams } from 'src/app/_models/UserParams';
 import { Member } from 'src/app/_models/member';
+import { Pagination } from 'src/app/_models/pagination';
+import { AccountService } from 'src/app/_services/account.service';
 import { MembersService } from 'src/app/_services/members.service';
 
 @Component({
@@ -10,29 +14,49 @@ import { MembersService } from 'src/app/_services/members.service';
 })
 export class MemberListComponent implements OnInit {
 
-  // members : Member[] = [];
+members: Member[] = [];
+pagination: Pagination | undefined;
+userParams : UserParams | undefined;
+user: User | undefined;
 
-  // constructor(private memberService : MembersService) {}
 
-
-  // ngOnInit(): void {
-  //   this.loadMembers();
-  // }
-
-  // loadMembers() {
-  //   this.memberService.getMembers().subscribe({
-  //     next : members => this.members = members
-  //   })
-  // }
-// new implementatoion below to replace old
-members$ : Observable<Member[]> | undefined
-
-constructor(private memberService : MembersService) {}
+constructor(private memberService : MembersService, private accountService: AccountService) {
+  this.accountService.currentUser$.pipe(take(1)).subscribe({
+    next: user => {
+      if (user) {
+        this.userParams = new UserParams(user);
+        this.user = user
+      }
+    }
+  })
+}
 
 
 ngOnInit(): void {
-  this.members$ = this.memberService.getMembers();
+//  this.members$ = this.memberService.getMembers();
+this.loadMembers();
 }
 
+loadMembers() {
+   if (!this.userParams) return;
+
+  this.memberService.getMembers(this.userParams).subscribe({
+    next : response => {
+      if (response.result && response.pagination) {
+      //  console.log(response.result);
+        this.members = response.result;
+        this.pagination = response.pagination;
+      }
+    }
+  })
+}
+
+
+pageChanged(event : any) {
+    if (this.userParams && this.userParams?.pageNumber !== event.page) {
+      this.userParams.pageNumber = event.page;
+      this.loadMembers();
+    }
+}
 
 }
