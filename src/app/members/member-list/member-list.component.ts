@@ -27,7 +27,7 @@ constructor(private memberService : MembersService) {
 
 ngOnInit(): void {
 //  this.members$ = this.memberService.getMembers();
-this.loadMembers();
+    this.loadMembers();
 }
 
 loadMembers() {
@@ -36,7 +36,7 @@ loadMembers() {
       this.memberService.getMembers(this.userParams).subscribe({
         next : response => {
           if (response.result && response.pagination) {
-          //  console.log(response.result);
+            console.log(response.result);
             this.members = response.result;
             this.pagination = response.pagination;
           }
